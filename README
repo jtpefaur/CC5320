@@ -1,0 +1,10 @@
+1. pi.c program compute the first 10000 decimals of the  number.
+	(a) Look at the source code of the program, and in particular, study the source code of routine DIVIDE.
+	(b) Profile and analyze the program behavior.
+	(c) Modify the code specializing the routine/s you consider necessary and check that the output of the 
+	new version is the same as the original version.
+	Hint: Specilize the code using memoization.
+	(d) Profile the new version of the program and compare it with the profile of the original code.
+	(e) Which speed-up have you obtained?
+
+2. MANDATORY: Optimize pi.c in order to reach the server's threshold.
