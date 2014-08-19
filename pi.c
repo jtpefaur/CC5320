@@ -6,6 +6,7 @@ int N, N4;
 char a[10240], b[10240], c[10240];
 char string[100];
 
+
 void DIVIDE( char *x, int n )                           
 {                                                
     int j, k;
