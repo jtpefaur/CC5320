@@ -8,9 +8,11 @@ int N, N4;
 char a[10240], b[10240], c[10240];
 char string[100];
 
-unsigned q_div_5[56];
-unsigned q_div_25[276];
-unsigned q_div_239[2630];
+unsigned q_div_5[56][2];
+unsigned q_div_25[276][2];
+unsigned q_div_239[2630][2];
+
+
 
 void lookUpTablesInit()
 {
@@ -20,21 +22,24 @@ void lookUpTablesInit()
     for(i = 0; i<57; i++)
     {
         if(i%5==0) toSet++;
-        q_div_5[i] = toSet;
+        q_div_5[i][0] = toSet;
+        q_div_5[i][1] = toSet*5;
     }
 
     toSet = -1;
     for(i = 0; i<277; i++)
     {
         if(i%25==0) toSet++;
-        q_div_25[i] = toSet;
+        q_div_25[i][0] = toSet;
+        q_div_25[i][1] = toSet*25;
     }
 
     toSet = -1;
     for(i = 0; i<2631; i++)
     {
         if(i%239==0) toSet++;
-        q_div_239[i]= toSet;
+        q_div_239[i][0]= toSet;
+        q_div_239[i][1]= toSet*239;
     }
 }
 
@@ -56,42 +61,46 @@ void DIVIDE( char *x, int n )
 void DIVIDE_5(char *x)
 {
 	int k;
-	unsigned r, u;
+	unsigned q, r, u;
 
 	r = 0;
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        r = u - q_div_5[u]*5;
-        x[k] = q_div_5[u];                
+        q = q_div_5[u][0];
+        r = u - q_div_5[u][1];
+        x[k] = q;                
 	}
 }
 
 void DIVIDE_25(char *x)
 {
 	int k;
-	unsigned r, u;
+	unsigned q, r, u;
 
 	r = 0;
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        r = u - q_div_25[u]*25;
-        x[k] = q_div_25[u];                      
+        q = q_div_25[u][0];
+        r = u - q_div_25[u][1];
+        x[k] = q;                      
 	}
 }
 
 void DIVIDE_239(char *x)
 {
 	int k;
-	unsigned r, u;
+	unsigned q, r, u;
 
+    
 	r = 0;
 	for(k=0; k<= N4; k++)
 	{
         u = r * 10 + x[k];
-        r = u - q_div_239[u]*239;
-        x[k] = q_div_239[u];                        
+        q = q_div_239[u][0];
+        r = u - q_div_239[u][1];
+        x[k] = q;                        
 	}
 }
 
