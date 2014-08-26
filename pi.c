@@ -5,27 +5,104 @@
 int N, N4;
 char a[10240], b[10240], c[10240];
 char string[100];
+char checksign = 1<<7;
 
+unsigned q_div_5[56];
+unsigned q_div_25[276];
+unsigned q_div_239[2630];
+
+void lookUpTablesInit()
+{
+    int toSet = -1;
+    int i;
+
+    for(i = 0; i<57; i++)
+    {
+        if(i%5==0) toSet++;
+        q_div_5[i] = toSet;
+    }
+
+    toSet = -1;
+    for(i = 0; i<277; i++)
+    {
+        if(i%25==0) toSet++;
+        q_div_25[i] = toSet;
+    }
+
+    toSet = -1;
+    for(i = 0; i<2631; i++)
+    {
+        if(i%239==0) toSet++;
+        q_div_239[i] = toSet;
+    }
+}
 
 void DIVIDE( char *x, int n )                           
 {                                                
-    int j, k;
+    int k;
     unsigned q, r, u;
-    long v;
-
+		
     r = 0;                                       
     for( k = 0; k <= N4; k++ )                  
     {                                            
         u = r * 10 + x[k];                       
-        q = u / n;                               
+        q = u /n;                               
         r = u - q * n;                           
         x[k] = q;                                
     }                                           
 }
 
+void DIVIDE_5(char *x)
+{
+	int k;
+	unsigned r, u;
+	float nInv = 0.2;
+
+	r = 0;
+	for(k=0; k<= N4; k++)
+	{
+		u = r * 10 + x[k];
+        r = u - q_div_5[u] * 5;                           
+		x[k] = q_div_5[u];
+	}
+}
+
+void DIVIDE_25(char *x)
+{
+	int k;
+	unsigned r, u;
+	float nInv = 0.04;
+
+	r = 0;
+	for(k=0; k<= N4; k++)
+	{
+		u = r * 10 + x[k];
+        r = u - q_div_25[u] * 25;                          
+		x[k] = q_div_25[u];
+	}
+}
+
+void DIVIDE_239(char *x)
+{
+	int k;
+	unsigned r, u;
+	float nInv = 0.0041841;
+
+	r = 0;
+	for(k=0; k<= N4; k++)
+	{
+		u = r * 10 + x[k];
+        r = u - q_div_239[u] * 239;                         
+		x[k] = q_div_239[u];
+	}
+}
+
+
+
+
 void LONGDIV( char *x, int n )                          
 {                                                
-    int j, k;
+    int k;
     unsigned q, r, u;
     long v;
 
@@ -42,7 +119,7 @@ void LONGDIV( char *x, int n )
     }                                            
     else                                         
     {                                            
-        r = 0;                                   
+        r = 0;
         for( k = 0; k <= N4; k++ )              
         {                                       
             if( r < 6553 )                      
@@ -64,9 +141,8 @@ void LONGDIV( char *x, int n )
 
 void MULTIPLY( char *x, int n )                        
 {                                            
-    int j, k;
-    unsigned q, r, u;
-    long v;
+    int k;
+    unsigned q, r;
     r = 0;                                   
     for( k = N4; k >= 0; k-- )               
     {                                        
@@ -85,14 +161,14 @@ void SET( char *x, int n )
 
 void SUBTRACT( char *x, char *y, char *z )                      
 {                                                
-    int j, k;
-    unsigned q, r, u;
-    long v;
+    int k;
     for( k = N4; k >= 0; k-- )                   
-    {                                            
-        if( (x[k] = y[k] - z[k]) < 0 )           
-        {                                        
-            x[k] += 10;                          
+    {  
+        char tmp = y[k] - z[k];
+        x[k] = tmp;                                         
+        if(tmp & checksign)           
+        {                                      
+            x[k] = tmp + 10;                        
             z[k-1]++;                            
         }                                        
     }                                            
@@ -118,8 +194,10 @@ int main( int argc, char *argv[] )
         sscanf( string, "%d", &N );
     }
 */
+
     setbuf(stdout, NULL);
 
+    lookUpTablesInit();
     calculate();
 
     epilog();
@@ -142,11 +220,11 @@ void calculate( void )
         LONGDIV( c, j );
 
         SUBTRACT( a, c, a );
-        DIVIDE( a, 25 );
+        DIVIDE_25(a);
 
         SUBTRACT( b, c, b );
-        DIVIDE( b, 239 );
-        DIVIDE( b, 239 );
+        DIVIDE_239(b);
+        DIVIDE_239(b);
 
         progress();
     }
@@ -154,10 +232,10 @@ void calculate( void )
     SET( c, 1 );
 
     SUBTRACT( a, c, a );
-    DIVIDE( a, 5 );
+    DIVIDE_5(a);
 
     SUBTRACT( b, c, b );
-    DIVIDE( b, 239 );
+    DIVIDE_239(b);
 
     MULTIPLY( a, 4 );
     SUBTRACT( a, a, b );
