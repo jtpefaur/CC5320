@@ -2,17 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MASK 128
+
 int N, N4;
 char a[10240], b[10240], c[10240];
 char string[100];
-char checksign = 1<<7;
 
 unsigned q_div_5[56];
 unsigned q_div_25[276];
 unsigned q_div_239[2630];
-unsigned q_div_5_mult_5[56];
-unsigned q_div_25_mult_25[276];
-unsigned q_div_239_mult_239[2630];
 
 void lookUpTablesInit()
 {
@@ -23,7 +21,6 @@ void lookUpTablesInit()
     {
         if(i%5==0) toSet++;
         q_div_5[i] = toSet;
-        q_div_5_mult_5[i] = toSet*5;
     }
 
     toSet = -1;
@@ -31,15 +28,13 @@ void lookUpTablesInit()
     {
         if(i%25==0) toSet++;
         q_div_25[i] = toSet;
-        q_div_25_mult_25[i] = toSet*25;
     }
 
     toSet = -1;
     for(i = 0; i<2631; i++)
     {
         if(i%239==0) toSet++;
-        q_div_239[i] = toSet;
-        q_div_239_mult_239[i] = toSet*239;
+        q_div_239[i]= toSet;
     }
 }
 
@@ -62,14 +57,13 @@ void DIVIDE_5(char *x)
 {
 	int k;
 	unsigned r, u;
-	float nInv = 0.2;
 
 	r = 0;
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        r = u - q_div_5_mult_5[u];                           
-		x[k] = q_div_5[u];
+        r = u - q_div_5[u]*5;
+        x[k] = q_div_5[u];                
 	}
 }
 
@@ -77,14 +71,13 @@ void DIVIDE_25(char *x)
 {
 	int k;
 	unsigned r, u;
-	float nInv = 0.04;
 
 	r = 0;
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        r = u - q_div_25_mult_25[u];                          
-		x[k] = q_div_25[u];
+        r = u - q_div_25[u]*25;
+        x[k] = q_div_25[u];                      
 	}
 }
 
@@ -92,19 +85,15 @@ void DIVIDE_239(char *x)
 {
 	int k;
 	unsigned r, u;
-	float nInv = 0.0041841;
 
 	r = 0;
 	for(k=0; k<= N4; k++)
 	{
-		u = r * 10 + x[k];
-        r = u - q_div_239_mult_239[u];                         
-		x[k] = q_div_239[u];
+        u = r * 10 + x[k];
+        r = u - q_div_239[u]*239;
+        x[k] = q_div_239[u];                        
 	}
 }
-
-
-
 
 void LONGDIV( char *x, int n )                          
 {                                                
@@ -170,12 +159,13 @@ void SUBTRACT( char *x, char *y, char *z )
     int k;
     for( k = N4; k >= 0; k-- )                   
     {  
-        char tmp = x[k] = y[k] - z[k];                                        
-        if(tmp & checksign)           
+        char tmp = y[k] - z[k];                                        
+        if(tmp & MASK)           
         {                                        
-            x[k] += 10;                          
+            tmp += 10;                          
             z[k-1]++;                            
-        }                                        
+        }
+        x[k] = tmp;                                        
     }                                            
 }
 
