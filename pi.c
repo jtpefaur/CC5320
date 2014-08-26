@@ -10,6 +10,9 @@ char checksign = 1<<7;
 unsigned q_div_5[56];
 unsigned q_div_25[276];
 unsigned q_div_239[2630];
+unsigned q_div_5_mult_5[56];
+unsigned q_div_25_mult_25[276];
+unsigned q_div_239_mult_239[2630];
 
 void lookUpTablesInit()
 {
@@ -20,6 +23,7 @@ void lookUpTablesInit()
     {
         if(i%5==0) toSet++;
         q_div_5[i] = toSet;
+        q_div_5_mult_5[i] = toSet*5;
     }
 
     toSet = -1;
@@ -27,6 +31,7 @@ void lookUpTablesInit()
     {
         if(i%25==0) toSet++;
         q_div_25[i] = toSet;
+        q_div_25_mult_25[i] = toSet*25;
     }
 
     toSet = -1;
@@ -34,6 +39,7 @@ void lookUpTablesInit()
     {
         if(i%239==0) toSet++;
         q_div_239[i] = toSet;
+        q_div_239_mult_239[i] = toSet*239;
     }
 }
 
@@ -62,7 +68,7 @@ void DIVIDE_5(char *x)
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        r = u - q_div_5[u] * 5;                           
+        r = u - q_div_5_mult_5[u];                           
 		x[k] = q_div_5[u];
 	}
 }
@@ -77,7 +83,7 @@ void DIVIDE_25(char *x)
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        r = u - q_div_25[u] * 25;                          
+        r = u - q_div_25_mult_25[u];                          
 		x[k] = q_div_25[u];
 	}
 }
@@ -92,7 +98,7 @@ void DIVIDE_239(char *x)
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        r = u - q_div_239[u] * 239;                         
+        r = u - q_div_239_mult_239[u];                         
 		x[k] = q_div_239[u];
 	}
 }
@@ -164,11 +170,10 @@ void SUBTRACT( char *x, char *y, char *z )
     int k;
     for( k = N4; k >= 0; k-- )                   
     {  
-        char tmp = y[k] - z[k];
-        x[k] = tmp;                                         
+        char tmp = x[k] = y[k] - z[k];                                        
         if(tmp & checksign)           
-        {                                      
-            x[k] = tmp + 10;                        
+        {                                        
+            x[k] += 10;                          
             z[k-1]++;                            
         }                                        
     }                                            
