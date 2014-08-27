@@ -74,6 +74,34 @@ void DIVIDE_5(char *x)
 	}
 }
 
+void DIVIDE_A25_B239_B239(char *x, char *y)
+{
+    int k;
+    unsigned q, rx, ry1, ry2, u;
+
+    rx = 0;
+    ry1 = 0;
+    ry2 = 0;
+    for(k=0; k<= N4; k++)
+    {
+        u = rx * 10 + x[k];
+        q = div_25[u][0];
+        rx = u - div_25[u][1];
+        x[k] = q;
+
+        u = ry1 * 10 + y[k];
+        q = div_239[u][0];
+        ry1 = u - div_239[u][1];
+
+        u = ry2 * 10 + q;
+        q = div_239[u][0];
+        ry2 = u - div_239[u][1];
+        y[k] = q;                      
+    }
+
+
+}
+
 void DIVIDE_25(char *x)
 {
 	int k;
@@ -104,6 +132,7 @@ void DIVIDE_239(char *x)
         x[k] = q;                        
 	}
 }
+
 
 void DIVIDE_239_2(char *x)
 {
@@ -246,11 +275,11 @@ void calculate( void )
         LONGDIV( c, j );
 
         SUBTRACT( a, c, a );
-        DIVIDE_25(a);
-
         SUBTRACT( b, c, b );
-        DIVIDE_239_2(b);
-        //DIVIDE_239(b);
+
+        DIVIDE_A25_B239_B239(a,b);
+        //DIVIDE_25(a);
+        //DIVIDE_239_2(b);
 
         progress();
     }
