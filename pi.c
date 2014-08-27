@@ -45,12 +45,13 @@ void DIVIDE( char *x, int n )
 {                                                
     int k;
     unsigned q, r, u;
+    float nInv = 1.0/n;
 		
     r = 0;                                       
     for( k = 0; k <= N4; k++ )                  
     {                                            
         u = r * 10 + x[k];                       
-        q = u /n;                               
+        q = u *nInv;                               
         r = u - q * n;                           
         x[k] = q;                                
     }                                           
