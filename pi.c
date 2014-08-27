@@ -12,7 +12,7 @@ char string[100];
 unsigned div_5[56];
 unsigned div_25[276];
 unsigned div_239[2630];
-
+char ceroOrTen[2] = {0,10};
 
 
 void lookUpTablesInit()
@@ -73,18 +73,16 @@ void DIVIDE_5(char *x)
 }
 
 void SUBTRACT( char *x, char *y, char *z )                      
-{                                                
+{
     int k;
+    char tmp;
     for( k = N4; k >= 0; k-- )                   
     {  
-        char tmp = y[k] - z[k];                                        
-        if(tmp & MASK)           
-        {                                        
-            tmp += 10;                          
-            z[k-1]++;                            
-        }
+        tmp = y[k] - z[k];                                                                                             
+        z[k-1] = z[k-1] + ((tmp>>7)&1);
+        tmp += ceroOrTen[((tmp>>7)&1)];                            
         x[k] = tmp;                                        
-    }                                            
+    }                                               
 }
 
 void BOTH_SUBTRACT( char *x, char *y, char *z )                      
@@ -94,21 +92,15 @@ void BOTH_SUBTRACT( char *x, char *y, char *z )
 
     for( k = N4; k >= 0; k-- )                   
     {  
-        tmp = y[k] - x[k];                                        
-        if(tmp & MASK)           
-        {                                        
-            tmp += 10;                          
-            x[k-1]++;                            
-        }
+        tmp = y[k] - x[k];
+        x[k-1] = x[k-1] + ((tmp>>7)&1);
+        tmp += ceroOrTen[((tmp>>7)&1)];                                         
         x[k] = tmp;
 
-        tmp = y[k] - z[k];                                        
-        if(tmp & MASK)           
-        {                                        
-            tmp += 10;                          
-            z[k-1]++;                            
-        }
-        z[k] = tmp;                                         
+        tmp = y[k] - z[k];
+        z[k-1] = z[k-1] + ((tmp>>7)&1);
+        tmp += ceroOrTen[((tmp>>7)&1)];
+        z[k] = tmp;                                        
     }                                            
 }
 
@@ -140,21 +132,6 @@ void DIVIDE_X25_Y239_Y239(char *x, char *y, char *z)
 
 }
 
-// void DIVIDE_25(char *x)
-// {
-// 	int k;
-// 	unsigned q, r, u;
-
-// 	r = 0;
-// 	for(k=0; k<= N4; k++)
-// 	{
-// 		u = r * 10 + x[k];
-//         q = div_25[u];
-//         r = u - div_25[u];
-//         x[k] = q;                      
-// 	}
-// }
-
 void DIVIDE_239(char *x)
 {
 	int k;
@@ -169,68 +146,7 @@ void DIVIDE_239(char *x)
         r = u - q*239;
         x[k] = q;                        
 	}
-}
-
-
-// void DIVIDE_239_2(char *x)
-// {
-//     int k;
-//     unsigned q, r1,r2, u;
-
-    
-//     r1 = 0;
-//     r2 = 0;
-//     for(k=0; k<= N4; k++)
-//     {
-//         u = r1 * 10 + x[k];
-//         q = div_239[u];
-//         r1 = u - q*239;
-
-//         u = r2 * 10 + q;
-//         q = div_239[u];
-//         r2 = u - q*239;
-//         x[k] = q;                       
-//     }
-// }
-
-// void LONGDIV( char *x, int n )                          
-// {                                                
-//     int k;
-//     unsigned q, r, u;
-//     long v;
-
-//     if( n < 6553 )                               
-//     {                                            
-//         r = 0;                                   
-//         for( k = 0; k <= N4; k++ )               
-//         {                                        
-//             u = r * 10 + x[k];                   
-//             q = u / n;                           
-//             r = u - q * n;                       
-//             x[k] = q;                            
-//         }                                       
-//     }                                            
-//     else                                         
-//     {                                            
-//         r = 0;
-//         for( k = 0; k <= N4; k++ )              
-//         {                                       
-//             if( r < 6553 )                      
-//             {                                   
-//                 u = r * 10 + x[k];              
-//                 q = u / n;                      
-//                 r = u - q * n;                  
-//             }                                   
-//             else                                
-//             {                                   
-//                 v = (long) r * 10 + x[k];       
-//                 q = v / n;                      
-//                 r = v - q * n;                  
-//             }                                   
-//             x[k] = q;                           
-//         }                                       
-//     }                                           
-// }
+}  
 
 void MULTIPLY( char *x, int n )                        
 {                                            
