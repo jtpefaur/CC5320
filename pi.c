@@ -74,7 +74,47 @@ void DIVIDE_5(char *x)
 	}
 }
 
-void DIVIDE_A25_B239_B239(char *x, char *y)
+void SUBTRACT( char *x, char *y, char *z )                      
+{                                                
+    int k;
+    for( k = N4; k >= 0; k-- )                   
+    {  
+        char tmp = y[k] - z[k];                                        
+        if(tmp & MASK)           
+        {                                        
+            tmp += 10;                          
+            z[k-1]++;                            
+        }
+        x[k] = tmp;                                        
+    }                                            
+}
+
+void BOTH_SUBTRACT( char *x, char *y, char *z )                      
+{                                                
+    int k;
+    char tmp;
+
+    for( k = N4; k >= 0; k-- )                   
+    {  
+        tmp = y[k] - x[k];                                        
+        if(tmp & MASK)           
+        {                                        
+            tmp += 10;                          
+            x[k-1]++;                            
+        }
+        x[k] = tmp;
+
+        tmp = y[k] - z[k];                                        
+        if(tmp & MASK)           
+        {                                        
+            tmp += 10;                          
+            z[k-1]++;                            
+        }
+        z[k] = tmp;                                         
+    }                                            
+}
+
+void DIVIDE_X25_Y239_Y239(char *x, char *y, char *z)
 {
     int k;
     unsigned q, rx, ry1, ry2, u;
@@ -82,9 +122,8 @@ void DIVIDE_A25_B239_B239(char *x, char *y)
     rx = 0;
     ry1 = 0;
     ry2 = 0;
-    for(k=0; k<= N4-9; k+=10)
+    for(k=0; k<= N4; k++)
     {
-        ///////////1///////////
         u = rx * 10 + x[k];
         q = div_25[u][0];
         rx = u - div_25[u][1];
@@ -97,169 +136,7 @@ void DIVIDE_A25_B239_B239(char *x, char *y)
         u = ry2 * 10 + q;
         q = div_239[u][0];
         ry2 = u - div_239[u][1];
-        y[k] = q;
-
-        ////////////2//////////////
-
-        u = rx * 10 + x[k+1];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+1] = q;
-
-        u = ry1 * 10 + y[k+1];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+1] = q; 
-
-        ////////////3/////////////
-
-        u = rx * 10 + x[k+2];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+2] = q;
-
-        u = ry1 * 10 + y[k+2];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+2] = q;                
-
-        /////////////4///////////////
-
-        u = rx * 10 + x[k+3];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+3] = q;
-
-        u = ry1 * 10 + y[k+3];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+3] = q; 
-
-        /////////////5/////////////
-
-        u = rx * 10 + x[k+4];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+4] = q;
-
-        u = ry1 * 10 + y[k+4];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+4] = q; 
-
-        ////////////6/////////////
-
-        u = rx * 10 + x[k+5];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+5] = q;
-
-        u = ry1 * 10 + y[k+5];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+5] = q; 
-
-        ///////////7///////////// 
-
-        u = rx * 10 + x[k+6];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+6] = q;
-
-        u = ry1 * 10 + y[k+6];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+6] = q;
-
-        ///////////8/////////////
-
-        u = rx * 10 + x[k+7];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+7] = q;
-
-        u = ry1 * 10 + y[k+7];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+7] = q;
-
-        /////////9//////////////
-
-        u = rx * 10 + x[k+8];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+8] = q;
-
-        u = ry1 * 10 + y[k+8];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+8] = q; 
-
-        ///////////////10////////
-
-        u = rx * 10 + x[k+9];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k+9] = q;
-
-        u = ry1 * 10 + y[k+9];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k+9] = q;      
-    }
-
-    for(; k<= N4; k+=10)
-    {
-        ///////////1///////////
-        u = rx * 10 + x[k];
-        q = div_25[u][0];
-        rx = u - div_25[u][1];
-        x[k] = q;
-
-        u = ry1 * 10 + y[k];
-        q = div_239[u][0];
-        ry1 = u - div_239[u][1];
-
-        u = ry2 * 10 + q;
-        q = div_239[u][0];
-        ry2 = u - div_239[u][1];
-        y[k] = q;
+        y[k] = q;                     
     }
 
 
@@ -376,23 +253,6 @@ void SET( char *x, int n )
     x[0] = n;                                    
 }
 
-
-void SUBTRACT( char *x, char *y, char *z )                      
-{                                                
-    int k;
-    for( k = N4; k >= 0; k-- )                   
-    {  
-        char tmp = y[k] - z[k];                                        
-        if(tmp & MASK)           
-        {                                        
-            tmp += 10;                          
-            z[k-1]++;                            
-        }
-        x[k] = tmp;                                        
-    }                                            
-}
-
-
 void calculate( void );
 void progress( void );
 void epilog( void );
@@ -437,12 +297,8 @@ void calculate( void )
         SET( c, 1 );
         LONGDIV( c, j );
 
-        SUBTRACT( a, c, a );
-        SUBTRACT( b, c, b );
-
-        DIVIDE_A25_B239_B239(a,b);
-        //DIVIDE_25(a);
-        //DIVIDE_239_2(b);
+        BOTH_SUBTRACT( a, c, b );
+        DIVIDE_X25_Y239_Y239(a,b,c);
 
         progress();
     }
