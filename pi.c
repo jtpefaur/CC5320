@@ -8,9 +8,9 @@ int N, N4;
 char a[10240], b[10240], c[10240];
 char string[100];
 
-unsigned q_div_5[56][2];
-unsigned q_div_25[276][2];
-unsigned q_div_239[2630][2];
+unsigned q_div_5[56];
+unsigned q_div_25[276];
+unsigned q_div_239[2630];
 
 
 
@@ -22,24 +22,21 @@ void lookUpTablesInit()
     for(i = 0; i<57; i++)
     {
         if(i%5==0) toSet++;
-        q_div_5[i][0] = toSet;
-        q_div_5[i][1] = toSet*5;
+        q_div_5[i] = toSet;
     }
 
     toSet = -1;
     for(i = 0; i<277; i++)
     {
         if(i%25==0) toSet++;
-        q_div_25[i][0] = toSet;
-        q_div_25[i][1] = toSet*25;
+        q_div_25[i] = toSet;
     }
 
     toSet = -1;
     for(i = 0; i<2631; i++)
     {
         if(i%239==0) toSet++;
-        q_div_239[i][0]= toSet;
-        q_div_239[i][1]= toSet*239;
+        q_div_239[i]= toSet;
     }
 }
 
@@ -67,8 +64,8 @@ void DIVIDE_5(char *x)
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        q = q_div_5[u][0];
-        r = u - q_div_5[u][1];
+        q = q_div_5[u];
+        r = u - 5*q;
         x[k] = q;                
 	}
 }
@@ -82,8 +79,8 @@ void DIVIDE_25(char *x)
 	for(k=0; k<= N4; k++)
 	{
 		u = r * 10 + x[k];
-        q = q_div_25[u][0];
-        r = u - q_div_25[u][1];
+        q = q_div_25[u];
+        r = u - 25*q;
         x[k] = q;                      
 	}
 }
@@ -98,10 +95,31 @@ void DIVIDE_239(char *x)
 	for(k=0; k<= N4; k++)
 	{
         u = r * 10 + x[k];
-        q = q_div_239[u][0];
-        r = u - q_div_239[u][1];
+        q = q_div_239[u];
+        r = u - q*239;
         x[k] = q;                        
 	}
+}
+
+void DIVIDE_239_2(char *x)
+{
+    int k;
+    unsigned q, r1,r2, u;
+
+    
+    r1 = 0;
+    r2 = 0;
+    for(k=0; k<= N4; k++)
+    {
+        u = r1 * 10 + x[k];
+        q = q_div_239[u];
+        r1 = u - q*239;
+
+        u = r2 * 10 + q;
+        q = q_div_239[u];
+        r2 = u - q*239;
+        x[k] = q;                       
+    }
 }
 
 void LONGDIV( char *x, int n )                          
@@ -227,8 +245,8 @@ void calculate( void )
         DIVIDE_25(a);
 
         SUBTRACT( b, c, b );
-        DIVIDE_239(b);
-        DIVIDE_239(b);
+        DIVIDE_239_2(b);
+        //DIVIDE_239(b);
 
         progress();
     }
