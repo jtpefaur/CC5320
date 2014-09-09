@@ -1,0 +1,9 @@
+1. As a part of a graphic engine, there is a routine that has to fill a buffer with green colour
+before printing the next frame. The screen is ROWSxCOLUMNS pixels.
+	(a) Analyze rgb.c code.
+	(b) Find the first level cache misses and the second cache level misses.
+	(c) Propose an optimization so we can better exploit the spatial locality of the data.
+	(d) Propose a new version that also reduces the number of memory accesess.
+
+2. MANDATORY: Optimize rgb.c in order to reach the server's threshold.
+
