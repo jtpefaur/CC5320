@@ -1,0 +1,4 @@
+Original execution time: 3.3 seconds
+Current execution time: 1.3 seconds
+
+-> speedup: 2.53

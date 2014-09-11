@@ -12,8 +12,6 @@ char string[100];
 unsigned div_5[56];
 unsigned div_25[276];
 unsigned div_239[2630];
-char ceroOrTen[2] = {0,10};
-
 
 void lookUpTablesInit()
 {
@@ -80,7 +78,7 @@ void SUBTRACT( char *x, char *y, char *z )
     {  
         tmp = y[k] - z[k];                                                                                             
         z[k-1] = z[k-1] + ((tmp>>7)&1);
-        tmp += ceroOrTen[((tmp>>7)&1)];                            
+        tmp += 10*((tmp>>7)&1);                            
         x[k] = tmp;                                        
     }                                               
 }
@@ -94,12 +92,12 @@ void BOTH_SUBTRACT( char *x, char *y, char *z )
     {  
         tmp = y[k] - x[k];
         x[k-1] = x[k-1] + ((tmp>>7)&1);
-        tmp += ceroOrTen[((tmp>>7)&1)];                                         
+        tmp += 10*((tmp>>7)&1);                                         
         x[k] = tmp;
 
         tmp = y[k] - z[k];
         z[k-1] = z[k-1] + ((tmp>>7)&1);
-        tmp += ceroOrTen[((tmp>>7)&1)];
+        tmp += 10*((tmp>>7)&1);
         z[k] = tmp;                                        
     }                                            
 }
@@ -128,8 +126,6 @@ void DIVIDE_X25_Y239_Y239(char *x, char *y, char *z)
         ry2 = u - q*239;
         y[k] = q;                     
     }
-
-
 }
 
 void DIVIDE_239(char *x)
