@@ -27,9 +27,9 @@ void rgb_verd()
 
 	for(j=0;j<COLUMNS;j++)
 	{
-		buffer[i][ROWS-1].r=0;
-		buffer[i][ROWS-1].g=1;
-		buffer[i][ROWS-1].b=0;
+		buffer[ROWS-1][j].r=0;
+		buffer[ROWS-1][j].g=1;
+		buffer[ROWS-1][j].b=0;
 	}
 }
 
