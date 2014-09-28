@@ -35,7 +35,6 @@ void rgb_verd()
 
 int main(int argc,char* argv[])
 {
-	printf("asd");
 	rgb_verd();
 	write(1,buffer,sizeof(buffer));
 	return(0);
