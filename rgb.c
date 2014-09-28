@@ -22,7 +22,7 @@ void rgb_verd()
 		for(j=0;j<COLUMNS;j++)
 		{
 		
-			*((unsigned int *)&buffer[i][j]) = 16711680;
+			*((unsigned int *)&buffer[i][j]) = 65536;
 		}
 	}
 }
