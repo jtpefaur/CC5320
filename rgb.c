@@ -5,6 +5,7 @@ typedef struct {
 	char r;
 	char g;
 	char b;
+	char extra;
 } Tpixel;
 
 
@@ -16,26 +17,19 @@ Tpixel buffer[ROWS][COLUMNS];
 void rgb_verd()
 {
 	unsigned int i,j;
-	for(i=0;i<ROWS - 1;i++)
+	for(i=0;i<ROWS;i++)
 	{
 		for(j=0;j<COLUMNS;j++)
 		{
 		
-			*((unsigned int *)&buffer[i][j]) = 0;
+			*((unsigned int *)&buffer[i][j]) = 16711680;
 		}
-	}
-
-	for(j=0;j<COLUMNS;j++)
-	{
-		
-			buffer[ROWS-1][j].r = 0;
-			buffer[ROWS-1][j].g = 0;
-			buffer[ROWS-1][j].b = 0;
 	}
 }
 
 int main(int argc,char* argv[])
 {
+	printf("asd");
 	rgb_verd();
 	write(1,buffer,sizeof(buffer));
 	return(0);
