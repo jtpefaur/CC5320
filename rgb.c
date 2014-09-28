@@ -7,6 +7,7 @@ typedef struct {
 	char b;
 } Tpixel;
 
+
 #define ROWS 5000
 #define COLUMNS 20000
 
