@@ -10,7 +10,7 @@ typedef struct {
 
 
 #define ROWS 5000
-#define COLUMNS 10000
+#define COLUMNS 20000
 
 Tpixel buffer[ROWS][COLUMNS];
 
@@ -19,7 +19,7 @@ void rgb_verd()
 	unsigned int i,j;
 	for(i=0;i<ROWS;i++)
 	{
-		for(j=0;j<COLUMNS;j++)
+		for(j=0;j<COLUMNS;j+=2)
 		{
 			*((long *)&buffer[i][j]) = 0x00100010;
 		}
