@@ -7,6 +7,7 @@
  * A transpose function is evaluated by counting the number of misses
  * on a 1KB direct mapped cache with a block size of 32 bytes.
  */ 
+ 
 #include <stdio.h>
 #include "cachelab.h"
 
