@@ -21,9 +21,7 @@ void rgb_verd()
 		for(j=0;j<COLUMNS;j++)
 		{
 		
-			buffer[i][j].r=0;
-			buffer[i][j].g=1;
-			buffer[i][j].b=0;
+			*((unsigned int *)&buffer[i][j]) = 0;
 		}
 	}
 }
