@@ -17,20 +17,12 @@ Tpixel buffer[ROWS][COLUMNS];
 void rgb_verd()
 {
 	unsigned int i,j;
-	for(i=0;i<ROWS-1;i++)
+	for(i=0;i<ROWS;i++)
 	{
 		for(j=0;j<COLUMNS;j++)
 		{
-		
 			*((long *)&buffer[i][j]) = 0x00100010;
 		}
-	}
-
-	for(j=0;j<COLUMNS;j++)
-	{
-		buffer[ROWS-1][j].r=0;
-		buffer[ROWS-1][j].g=1;
-		buffer[ROWS-1][j].b=0;
 	}
 }
 
