@@ -24,7 +24,8 @@ int is_transpose(int M, int N, int A[N][M], int B[M][N]);
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 {
-    int i, j, tmp, x, y;
+    int i, j, tmp, x, y, currentDiag;
+    
 
 
     if(M==32 && N==32)
@@ -34,8 +35,21 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
             for (j = 0; j < M; j+=8) {
                 for(x=i; x<i+8; x++) {
                     for(y=j; y<j+8;y++) {
-                        tmp = A[x][y];
-                        B[y][x] = tmp;
+
+                        if(y!=x)
+                        {
+                            B[y][x] = A[x][y];
+                        }
+
+                        else
+                        {
+                            tmp = A[x][y];
+                            currentDiag = x;
+                        }
+                    }
+                    if(i==j)
+                    {
+                        B[currentDiag][currentDiag] = tmp;
                     }
                 }
             }
@@ -45,12 +59,25 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 
     else if(M==64 && N==64)
     {
-        for (i = 0; i < N; i+=32) {
+        for (i = 0; i < N; i+=4) {
             for (j = 0; j < M; j+=4) {
-                for(x=i; x<i+32; x++) {
+                for(x=i; x<i+4; x++) {
                     for(y=j; y<j+4;y++) {
-                        tmp = A[x][y];
-                        B[y][x] = tmp;
+                         
+                        if(y!=x)
+                        {
+                            B[y][x] = A[x][y];
+                        }
+
+                        else
+                        {
+                            tmp = A[x][y];
+                            currentDiag = x;
+                        }
+                    }
+                    if(i==j)
+                    {
+                        B[currentDiag][currentDiag] = tmp;
                     }
                 }
             }
@@ -58,11 +85,21 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
         
     }
 
-    /*else if(M==61 && N==67)
-    {
-        
-    }*/
-    
+    else if (M == 61 && N == 67) {
+        for (i = 0; i < N; i += 20) {
+            for (j = 0; j < M;j += 1) {
+                for (x = i; x < i + 20; x++) {
+                    for (y = j; y < j + 1; y++) {
+                        if (x > 66 || j > 60)
+                            continue;
+                        else
+                            B[y][x] = A[x][y];
+            }
+        }
+        }
+    }
+    }
+
     else
     {    
         for (j = 0; j < M; j++) {
@@ -178,15 +215,15 @@ void transBlocking16(int M, int N, int A[N][M], int B[M][N])
     }      
 }
 
-char transBlocking32_4_desc[] = "32x4 block tiling";
-void transBlocking32_4(int M, int N, int A[N][M], int B[M][N])
+char transBlocking16_2_desc[] = "16x8 block tiling";
+void transBlocking16_2(int M, int N, int A[N][M], int B[M][N])
 {
     int i, j, tmp, x, y;
 
-    for (i = 0; i < N; i+=32) {
-        for (j = 0; j < M; j+=4) {
-            for(x=i; x<i+32; x++) {
-                for(y=j; y<j+4;y++) {
+    for (i = 0; i < N; i+=64) {
+        for (j = 0; j < M; j+=1) {
+            for(x=i; x<i+64; x++) {
+                for(y=j; y<j+1;y++) {
                     tmp = A[x][y];
                     B[y][x] = tmp;
                 }
@@ -194,6 +231,7 @@ void transBlocking32_4(int M, int N, int A[N][M], int B[M][N])
         }
     }      
 }
+
 
 char trans_desc[] = "Simple row-wise scan transpose";
 void trans(int M, int N, int A[N][M], int B[M][N])
@@ -221,7 +259,7 @@ void registerFunctions()
     registerTransFunction(transpose_submit, transpose_submit_desc); 
 
     /* Register any additional transpose functions */
-    registerTransFunction(transBlocking16, transBlocking16_desc);
+    /*registerTransFunction(transBlocking16, transBlocking16_desc);
 
     registerTransFunction(transBlocking8, transBlocking8_desc); 
 
@@ -229,9 +267,9 @@ void registerFunctions()
 
     registerTransFunction(transBlocking2, transBlocking2_desc);
 
-    registerTransFunction(transBlocking32_4, transBlocking32_4_desc);
+    registerTransFunction(transBlocking16_2, transBlocking16_2_desc);
 
-    registerTransFunction(transBlocking3, transBlocking3_desc); 
+    registerTransFunction(transBlocking3, transBlocking3_desc);*/
 
     registerTransFunction(trans, trans_desc);
 }
