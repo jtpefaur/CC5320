@@ -58,10 +58,10 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
         
     }
 
-    else if(M==61 && N==67)
+    /*else if(M==61 && N==67)
     {
         
-    }
+    }*/
     
     else
     {    
