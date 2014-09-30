@@ -59,7 +59,7 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 
     else if(M==64 && N==64)
     {
-        for (j = 0; j < M; j+=4){//esta intercambio con la de abajo 
+        for (j = 0; j < M; j+=4){
             for (i = 0; i < N; i+=4) {
                 for(x=i; x<i+4; x++) {
                     for(y=j; y<j+4;y++) {
@@ -86,18 +86,16 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
     }
 
     else if (M == 61 && N == 67) {
-        for (i = 0; i < N; i += 12) {
-            for (j = 0; j < M;j += 4) {
-                for (y = j; y < j + 4; y++){//esta intercambiado con el de abajo
-                    for (x = i; x < i + 12; x++) {
-                        if (x > 66 || y > 60)
-                            continue;
-                        else
+        for (j = 0; j < M;j += 17) {
+            for (i = 0; i < N; i += 1) {
+                for (x = i; x < i + 1 ; x++){
+                    for(y = j; y < j + 17; y++) {
+                        if (x <= 66 && y <= 60)
                             B[y][x] = A[x][y];
+                    }
+                }
             }
         }
-        }
-    }
     }
 
     else
