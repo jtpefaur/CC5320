@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <emmintrin.h>
 
  
 void panic(char *miss)
@@ -15,18 +16,41 @@ void panic(char *miss)
  
 int main(int argc, char *argv[])
 {
-    char c1, c2;
-    int n1, n2;
+    char buff[16];
+    int n;
  
-    while (((n1=read(0, &c1, 1)) > 0) && ((n2=read(0, &c2, 1)) > 0))
+    /*Solo funciona si el tamano del archivo es divisible por 16bytes, se deberia
+    agregar para el caso en que no lo sea*/
+    while ((n = read(0, buff, 16)) > 0)
     {
-        if (write(1, &c2, 1) < 0) panic("write1");
-        if (write(1, &c1, 1) < 0) panic("write2");
+        __m128i loadBuf, leftResult, rightResult, result, num;
+
+        //Cargo los 16bytes en el registro de 128bits
+        loadBuf = _mm_load_si128((__m128i *) buff);
+
+        //Seteo un 8 para hacer shift
+        num = _mm_set_epi32(0, 0, 0, 8);
+
+        //shift a la izquierda/derecha en 8 bits
+        leftResult = _mm_sll_epi16(loadBuf, num);
+        rightResult = _mm_srl_epi16(loadBuf, num);
+
+        //un and a lo shifteado, hay 8 bits que interesan, despues los 8 siguientes no, y asi..
+        num = _mm_set_epi32(0xff00ff00, 0xff00ff00, 0xff00ff00, 0xff00ff00);
+        leftResult = _mm_and_si128(leftResult, num);
+        num = _mm_set_epi32(0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff);
+        rightResult = _mm_and_si128(rightResult, num);
+
+        //or de los dos resultados para juntarlos, teniendo asi el swap
+        result = _mm_or_si128(leftResult, rightResult);
+
+        //cargo el resultado en el buff
+        _mm_store_si128((__m128i *)buff, result);
+
+        if (write(1, buff, 16) < 0) panic("write");
     }
  
-    if ((n1==-1) || (n2==-1)) panic("read");
-    if ((n1==1) && (n2==0))
-            if (write(1, &c1, 1) < 0) panic("write");
+    if (n == -1) panic("read");
  
     return 0;
 }
