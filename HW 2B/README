@@ -1,0 +1,89 @@
+1. The code trans.c contains a simple matrix transpose implementation. The objective of this activity is 
+   to minimize the first level cache misses for different cache parameters and different matrix sizes.
+	(a) Study the behaviour of csim-ref, using the base case in trans.c (function trans()), for cache parameters and matrix sizes:
+		(1) s=5, E=1, b=5, M=N=32
+		(2) s=5, E=2, b=5, M=N=32
+		(3) s=5, E=4, b=5, M=N=32
+		(4) s=5, E=1, b=5, M=N=64
+		(5) s=5, E=2, b=5, M=N=64
+		(6) s=5, E=4, b=5, M=N=64
+	(b) Which cache parameters are most similar to our server?
+	(c) Optimize the matrix transpose implementation (function transpose_submit()) minimizing the first level cache misses for s=5, E=1, b=5,
+            and the matrix sizes M=N=32, M=N=64 and M=61 and N=67. Your submission must attain to the following constraints:
+		- Your code in trans.c must compile without warnings (use the Makefile without modifying it)
+		- You are allowed to define at most 12 local variables of type int per transpose function
+		- You are not allowed to skip the previous rule by using any variables of type long or by using any bit tricks to 
+		  store more than one value to a single variable.
+		- Your transpose function may not use recursion.
+		- If you choose to use additional functions, you may not have more than 12 local variables on the stack at a time 
+		  between your helper functions and your top level transpose function. For example, if your transpose declares 8 variables, 
+		  and then you call a function which uses 4 variables, which calls another function which uses 2, you will have 14 variables 
+		  on the stack, and you will be in violation of the rule.
+		- Your transpose function may not modify array A. You may, however, do whatever you want with the contents of array B.
+		- You are NOT allowed to define any arrays in your code or to use any variant of malloc.
+	    If your final score (misses count) reaches the server threshold, your code will be scanned and reviewed in order to check
+	    the feasibility of these constraints. If any constraint is not fulfilled (reaching or not the threshold), your final grade will
+	    be multiplied by 0.5 (with minimum 1.0).
+
+
+How to check you implementation's miss count:
+
+In the file trans.c there are 2 functions, transpose_submit and trans, each performing the base tranpose code:
+_________________________________________________________________
+|void transpose_submit(int M, int N, int A[N][M], int B[M][N])   
+|{
+|    int i, j, tmp;
+|
+|    for (i = 0; i < N; i++) {
+|        for (j = 0; j < M; j++) {
+|            tmp = A[i][j];
+|            B[j][i] = tmp;
+|        }
+|    }
+|}
+|
+|void trans(int M, int N, int A[N][M], int B[M][N])
+|{
+|    int i, j, tmp;
+|
+|    for (i = 0; i < N; i++) {
+|        for (j = 0; j < M; j++) {
+|            tmp = A[i][j];
+|            B[j][i] = tmp;
+|        }
+|    }    
+|}
+-----------------------------------------------------------------
+
+Modify the function transpose_submit in any way that you prefer, respecting the contraints described above.
+To test your implementation, execute the following commands:
+
+_________________________________________________________________________
+| $ chmod +x csim-ref
+| $ make clean;make
+| $ ./test-trans -M 32 -N 32
+| ...
+| 
+| Summary for official submission (func 0): correctness=1 misses=1183
+| 
+| TEST_TRANS_RESULTS=1:1183
+| $ ./test-trans -M 64 -N 64
+| ...
+| 
+| Summary for official submission (func 0): correctness=1 misses=4723
+| 
+| TEST_TRANS_RESULTS=1:4723
+| $ ./test-trans -M 61 -N 67
+| ...
+| 
+| Summary for official submission (func 0): correctness=1 misses=4423
+| 
+| TEST_TRANS_RESULTS=1:4423
+-------------------------------------------------------------------------
+
+Each test deliver the final output in the last line as
+
+TEST_TRANS_RESULTS=valid:num_misses
+ 
+If valid=0, your implementation is not perfoming the tranposition correctly.
+
